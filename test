@@ -1,0 +1,129 @@
+import time
+import logging
+from aiogram import Bot, Dispatcher, executor, types
+import openpyxl as op
+import random
+
+logging.basicConfig(level=logging.INFO)
+
+TOKEN = '5909034210:AAH3cL4uut3i-twYYGBdmVbpUfklQqjl1e8'
+# Выбираем файл формата эксель с таблицей
+file_name = 'my_artikel.xlsx'
+wort_list = []
+wb = op.load_workbook(file_name, data_only=True)
+sheet = wb.active
+# создаем переменную равную числу строк в табцлице
+max_rows = sheet.max_row
+
+for i in range(2, max_rows + 1):
+    index = sheet.cell(row=i, column=1).value  # приставеваем переменной столбец индекс
+    artikel = sheet.cell(row=i, column=2).value  # приставеваем переменной столбец артикль
+    wort = sheet.cell(row=i, column=3).value  # присваиваем переменной столбец слово
+    translate = sheet.cell(row=i, column=4).value  # приставеваем переменной столбец перевод
+
+    wort_list.append([artikel, wort, translate])
+
+    if not wort:
+        continue
+
+#print(*MESSAGE, sep=' ')
+
+bot = Bot(token = TOKEN)
+dp = Dispatcher(bot = bot)
+
+@dp.message_handler(commands = 'start')
+async def start_handler(message: types.Message):
+    user_id = message.from_user.id
+    user_name = message.from_user.first_name
+    user_full_name = message.from_user.full_name
+    logging.info(f'{user_id=} {user_full_name=} {time.asctime()}')
+    await message.reply(f'Привет, {user_full_name}!')
+
+    for i in range(15):
+        time.sleep(3600)
+        MESSAGE = " ".join(random.choice(wort_list))
+        await bot.send_message(user_id, MESSAGE.format(user_name))
+
+if __name__ == '__main__':
+    executor.start_polling(dp)
+ --------------------------------------------------------------
+
+
+
+
+
+
+
+
+#_________________
+
+
+
+# count_words = int(input('введите количество слов: '))
+# count_true_anwords = 0
+#
+# for count_words_index in range(0, count_words):
+#     rand_words = random.randint(0, len(words_list_excel))
+#     print(f'\n{words_list_excel[rand_words][1]}')
+#     article_choice = input('выберете правильный артикль. напишите "der","die" или "das": ')
+#     if article_choice == words_list_excel[rand_words][0]:  # это артикль
+#         print(f'{" ".join(words_list_excel[rand_words])} \nправильно. вы большой молодец')
+#         count_true_anwords += 1
+#         new_words.append(words_list_excel[rand_words][1])
+#
+#     else:
+#         print(f'{" ".join(words_list_excel[rand_words])} \nслово добавлено в список изучения')
+#
+#     with open("new_words.txt", "w", encoding="utf-8") as f:
+#         for i in range(0, len(new_words)):
+#             f.write(new_words[i] + '\n')
+#
+# print(f'''\nколичество правильных ответов {count_true_anwords} из {count_words}
+#               Эффективность тренировки: {round((count_true_anwords / count_words * 100), 2)} процентов''')
+# print(f'''результат освоения вашего курса {len(new_words)} из {len(words_list_excel_2)}
+#               Статистика освония курса: {round((len(new_words) / len(words_list_excel_2) * 100), 2)} процентов''')
+
+
+
+@dp.message_handler(commands=['start']) #Явно указываем в декораторе, на какую команду реагируем.
+async def send_welcome(message: types.Message):
+   await message.reply("Привет!\nЭто бот-тренер артиклей в немецком языке")
+@dp.message_handler(commands=['start']) #Явно указываем в декораторе, на какую команду реагируем.
+async def send_welcome(message: types.Message):
+   await message.reply("Привет!\nЯ Эхо-бот от Skillbox!\nОтправь мне любое сообщение, а я тебе обязательно отвечу.")
+
+#bot.send_message(m.chat.id, 'введите количество слов для тренировки: ')
+
+
+
+    # count_true_anwort = 0
+    # for count_wort_index in range(0, 10):
+    #     rand_wort = random.randint(2, max_rows + 1)
+    #     print(f'\n{wort_list[rand_wort][1]}')
+    #
+    #     #article_choice = str(input('выберете правильный артикль. напишите "der","die" или "das": '))
+    #     bot.send_message(m.chat.id,'Нажми: \nDer\nDie\nDas для ответа ',reply_markup=markup)
+    #
+    #     # Получение сообщений от юзера
+    #     @bot.message_handler(content_types=["text"])
+    #     def handle_text(message):
+    #
+    #
+    #         if message.text.strip() == wort_list[rand_wort][0]:  # это артикль
+    #             answer = *wort_list[rand_wort], sep=' '
+    #             bot.send_message(message.chat.id, answer)
+    #             print(*wort_list[rand_wort], sep=' ', )
+    #             print('\nправильно. вы большой молодец')
+    #             count_true_anwort += 1
+    #         else:
+    #             print(*wort_list[rand_wort], sep=' ')
+    #         print('\nслово добавлено в список изучения')
+    #     print(f'Вы ответили правильно на {count_true_anwort} вопросов из {count_wort}'
+    #           f'\nЭффективность тренировки: {round((count_true_anwort / count_wort * 100), 2)} процентов')
+    #
+    #     bot.send_message(m.chat.id, 'Нажми: \nФакт для получения интересного факта\nПоговорка — для получения мудрой цитаты ',reply_markup=markup)
+
+
+
+if __name__ == '__main__':
+    executor.start_polling(bot)

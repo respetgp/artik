@@ -143,5 +143,9 @@ def main(message, words_list_excel=None):
 
 
 if __name__ == '__main__':
+    """
+    main bot function
+    """
+
     bot.skip_pending = True
     bot.polling(none_stop=True)

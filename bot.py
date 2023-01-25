@@ -111,7 +111,8 @@ def main(message, words_list_excel=None):
             current_answer += 1
 
             if count_words == current_answer:
-                bot.send_message(message.chat.id, f'''количество правильных ответов {count_true_anwords} из {count_words}
+                bot.send_message(message.chat.id,
+                                 f'''количество правильных ответов {count_true_anwords} из {count_words}
                               Эффективность тренировки: {round((count_true_anwords / count_words * 100), 2)} процентов''')
                 bot.send_message(message.chat.id,
                                  f'''результат освоения вашего курса {len(new_words)} из {len(words_list_excel_2)}
@@ -124,7 +125,6 @@ def main(message, words_list_excel=None):
                 #     bot.send_message(message.chat.id, 'Нажмите /start')
                 # else:
                 #     bot.send_message(message.chat.id, 'Пока. Tschüss')
-
 
         bot.send_message(message.chat.id, words_list_excel_3[current_answer][1])
         current_article = words_list_excel_3[current_answer][0]
@@ -140,6 +140,7 @@ def main(message, words_list_excel=None):
         with open("new_words.txt", "w", encoding="utf-8") as f:
             for i in range(0, len(new_words)):
                 f.write(new_words[i] + '\n')
+
 
 if __name__ == '__main__':
     bot.skip_pending = True
